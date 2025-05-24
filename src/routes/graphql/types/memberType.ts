@@ -1,15 +1,15 @@
-import { MemberType } from "@prisma/client";
 import { GraphQLEnumType, GraphQLFloat, GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType } from "graphql";
+import { MemberType } from "@prisma/client";
 import { Context } from "./context.js";
 
 export const MemberTypeId = new GraphQLEnumType({
   name: 'MemberTypeId',
   values: {
-    basic: {
-      value: 'basic',
+    BASIC: {
+      value: 'BASIC',
     },
-    business: {
-      value: 'business',
+    BUSINESS: {
+      value: 'BUSINESS',
     },
   },
 });

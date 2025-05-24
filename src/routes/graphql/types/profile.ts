@@ -1,8 +1,9 @@
-import { Profile } from "@prisma/client";
 import { GraphQLBoolean, GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType } from "graphql";
+import { Profile } from "@prisma/client";
 import { Context } from "./context.js";
 import { UUIDType } from "./uuid.js";
-import { MemberTypeId } from "./memberType.js";
+import { MemberObjectType } from "./memberType.js";
+import { memberTypeResolvers } from "../resolvers/memberType.js";
 
 export const ProfileObjectType = new GraphQLObjectType<Profile, Context>({
   name: 'ProfileType',
@@ -17,7 +18,8 @@ export const ProfileObjectType = new GraphQLObjectType<Profile, Context>({
       type: new GraphQLNonNull(GraphQLInt),
     },
     memberType: {
-      type: new GraphQLNonNull(MemberTypeId),
+      type: new GraphQLNonNull(MemberObjectType),
+      resolve: memberTypeResolvers.memberTypeBySourceId,
     }
   }
 });
