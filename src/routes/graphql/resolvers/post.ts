@@ -17,13 +17,37 @@ export const postResolvers: { [key: string]: GraphQLFieldResolver<unknown, Conte
     })
   },
   postsByUserId: async (source, _args, context): Promise<Post[] | null> => {
-      if (!isUser(source)) {
-        return null
-      }
-      return await context.prisma.post.findMany({
-        where: {
-          authorId: source.id,
-        }
-      })
+    if (!isUser(source)) {
+      return null
     }
+    return await context.prisma.post.findMany({
+      where: {
+        authorId: source.id,
+      }
+    })
+  },
+  createPost: async (_source, args: { dto: Pick<Post, 'title' | 'content' | 'authorId'>}, context): Promise<Post> => {
+    const { dto } = args;
+    return await context.prisma.post.create({
+      data: dto,
+    })
+  },
+  changePost: async (_source, args: { id: string, dto: Pick<Post, 'title' | 'content'>}, context): Promise<Post> => {
+    const { id, dto } = args;
+    return await context.prisma.post.update({
+      where: {
+        id,
+      },
+      data: dto,
+    })
+  },
+  deletePost: async (_source, args: { id: string }, context): Promise<string> => {
+    const { id } = args;
+    await context.prisma.post.delete({
+      where: {
+        id,
+      }
+    });
+    return 'Post has been deleted';
+  }
 };

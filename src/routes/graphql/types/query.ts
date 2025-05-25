@@ -13,7 +13,7 @@ export const query = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
       memberTypes: {
-        type: MembersObjectType,
+        type: new GraphQLNonNull(MembersObjectType),
         resolve: memberTypeResolvers.memberTypes
       },
       memberType: {
@@ -26,7 +26,7 @@ export const query = new GraphQLObjectType({
         resolve: memberTypeResolvers.memberTypeById,
       },
       users: {
-        type: UsersObjectType,
+        type: new GraphQLNonNull(UsersObjectType),
         resolve: userResolvers.users,
       },
       user: {
@@ -39,7 +39,7 @@ export const query = new GraphQLObjectType({
         resolve: userResolvers.userById,
       },
       posts: {
-        type: PostsObjectType,
+        type: new GraphQLNonNull(PostsObjectType),
         resolve: postResolvers.posts,
       },
       post: {
@@ -52,7 +52,7 @@ export const query = new GraphQLObjectType({
         resolve: postResolvers.postById,
       },
       profiles: {
-        type: ProfilesObjectType,
+        type: new GraphQLNonNull(ProfilesObjectType),
         resolve: profileResolvers.profiles
       },
       profile: {

@@ -53,4 +53,50 @@ export const userResolvers: { [key: string]: GraphQLFieldResolver<unknown, Conte
       },
     });
   },
+  createUser: async (_source, args: { dto: Pick<User, 'balance' | 'name'>}, context): Promise<User> => {
+    const { dto } = args;
+    return await context.prisma.user.create({
+      data: dto
+    })
+  },
+  changeUser: async (_source, args: { id: string, dto: Pick<User, 'name' | 'balance'>}, context): Promise<User> => {
+    const { id, dto } = args;
+    return await context.prisma.user.update({
+      where: {
+        id,
+      },
+      data: dto,
+    })
+  },
+  deleteUser: async (_source, args: { id: string }, context): Promise<string> => {
+    const { id } = args;
+    await context.prisma.user.delete({
+      where: {
+        id,
+      }
+    });
+    return 'User has been deleted';
+  },
+  subscribeTo: async (_source, args: { userId: string; authorId: string }, context): Promise<string> => {
+    const { userId, authorId } = args;
+    await context.prisma.subscribersOnAuthors.create({
+      data: {
+        subscriberId: userId,
+        authorId,
+      }
+    });
+    return 'User has been subscribed to author';
+  },
+  unsubscribeFrom: async (_source, args: { userId: string; authorId: string }, context): Promise<string> => {
+    const { userId, authorId } = args;
+    await context.prisma.subscribersOnAuthors.delete({
+      where: {
+        subscriberId_authorId: {
+          subscriberId: userId,
+          authorId,
+        },
+      }
+    });
+    return 'User has been unsubscribed from author';
+  },
 };
