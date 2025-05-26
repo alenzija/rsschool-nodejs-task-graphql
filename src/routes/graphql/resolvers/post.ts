@@ -20,11 +20,7 @@ export const postResolvers: { [key: string]: GraphQLFieldResolver<unknown, Conte
     if (!isUser(source)) {
       return null
     }
-    return await context.prisma.post.findMany({
-      where: {
-        authorId: source.id,
-      }
-    })
+    return await context.loaders.postsLoader.load(source.id);
   },
   createPost: async (_source, args: { dto: Pick<Post, 'title' | 'content' | 'authorId'>}, context): Promise<Post> => {
     const { dto } = args;

@@ -16,14 +16,10 @@ export const memberTypeResolvers: { [key: string]: GraphQLFieldResolver<unknown,
       },
     })
   },
-  memberTypeBySourceId: async (source, _args: MemberType, context): Promise<MemberType | null> => {
+  memberTypeBySourceId: async (source, _args: MemberType, context) => {
     if (!isProfile(source)) {
       return null;
     }
-    return await context.prisma.memberType.findUnique({
-      where: {
-        id: source.memberTypeId,
-      },
-    })
+    return await context.loaders.memberTypeLoader.load(source.memberTypeId)
   },
 };

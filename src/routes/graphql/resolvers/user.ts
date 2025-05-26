@@ -21,37 +21,17 @@ export const userResolvers: { [key: string]: GraphQLFieldResolver<unknown, Conte
       return null;
     };
 
-    const subscribersOnAuthors = await context.prisma.subscribersOnAuthors.findMany({
-      where: {        
-        subscriberId: source.id,   
-      },
-    });
+    const { userSubscribedTo} = await context.loaders.userLoaders.load(source.id)
 
-    return await context.prisma.user.findMany({
-      where: {
-        id: {
-          in: subscribersOnAuthors.map(({authorId}) => authorId),
-        }  
-      },
-    });
+    return userSubscribedTo;
   },
   subscribedToUser: async function (source, _args, context): Promise<User[] | null> {
     if (!isUser(source)) {
       return null;
     }
-    const subscribersOnAuthors = await context.prisma.subscribersOnAuthors.findMany({
-      where: {        
-        authorId: source.id,   
-      },
-    });
+    const { subscribedToUser} = await context.loaders.userLoaders.load(source.id)
 
-    return await context.prisma.user.findMany({
-      where: {
-        id: {
-          in: subscribersOnAuthors.map(({subscriberId}) => subscriberId),
-        }  
-      },
-    });
+    return subscribedToUser;
   },
   createUser: async (_source, args: { dto: Pick<User, 'balance' | 'name'>}, context): Promise<User> => {
     const { dto } = args;

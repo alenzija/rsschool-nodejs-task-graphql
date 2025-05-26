@@ -20,12 +20,8 @@ export const profileResolvers: { [key: string]: GraphQLFieldResolver<unknown, Co
     if (!isUser(source)) {
       return null;
     }
-
-    return await context.prisma.profile.findUnique({
-      where: {
-        userId: source.id,
-      }
-    });
+  
+    return await context.loaders.profileLoader.load(source.id);
   },
   createProfile: async (_source, args: { dto: Pick<Profile, 'isMale' | 'memberTypeId' | 'userId' | 'yearOfBirth'>}, context): Promise<Profile> => {
     const { dto } = args;

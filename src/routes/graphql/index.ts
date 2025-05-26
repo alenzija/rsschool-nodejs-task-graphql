@@ -4,6 +4,10 @@ import { graphql, GraphQLSchema, parse, validate } from 'graphql';
 import { query } from './types/query.js';
 import { mutation } from './types/mutation.js';
 import depthLimit from 'graphql-depth-limit';
+import { memberTypeDataLoader } from './loaders/memberType.js';
+import { profileDataLoader } from './loaders/profile.js';
+import { postsDataLoader } from './loaders/post.js';
+import { userDataLoaders } from './loaders/user.js';
 
 const plugin: FastifyPluginAsyncTypebox = async (fastify) => {
   const { prisma } = fastify;
@@ -28,7 +32,13 @@ const plugin: FastifyPluginAsyncTypebox = async (fastify) => {
         source: req.body.query,
         variableValues: req.body.variables,
         contextValue: {
-          prisma
+          prisma,
+          loaders: {
+            memberTypeLoader: memberTypeDataLoader(prisma),
+            profileLoader: profileDataLoader(prisma),
+            postsLoader: postsDataLoader(prisma),
+            userLoaders: userDataLoaders(prisma),
+          }
         },
       });
     },
